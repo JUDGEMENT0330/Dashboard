@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Shield, BookOpen, Search, AlertTriangle, CheckCircle, XCircle, Upload, Loader, ExternalLink, Lock, Code, FileJson } from 'lucide-react';
+import { Shield, BookOpen, Search, AlertTriangle, CheckCircle, XCircle, Upload, Loader, ExternalLink, Lock, Code, FileJson, Menu, X } from 'lucide-react';
 
 // ========================
 // DATOS EDUCATIVOS
@@ -375,10 +375,9 @@ const useOsvScanner = () => {
     try {
       const packageList = Object.entries(dependencies).map(([name, version]) => ({
         name,
-        version: version.replace(/^[\^~]/, '') // Elimina ^ y ~
+        version: version.replace(/^[\^~]/, '')
       }));
 
-      // Consultar OSV API para cada paquete
       const promises = packageList.map(async (pkg) => {
         try {
           const response = await fetch('https://api.osv.dev/v1/query', {
@@ -444,8 +443,8 @@ const useOsvScanner = () => {
 // COMPONENTES
 // ========================
 
-// Sidebar de navegación
-const Sidebar = ({ currentPage, setCurrentPage }) => {
+// Sidebar de navegación con diseño responsivo
+const Sidebar = ({ currentPage, setCurrentPage, isOpen, setIsOpen }) => {
   const menuItems = [
     { id: 'home', icon: Shield, label: 'Inicio' },
     { id: 'education', icon: BookOpen, label: 'Educación' },
@@ -453,124 +452,169 @@ const Sidebar = ({ currentPage, setCurrentPage }) => {
   ];
 
   return (
-    <div className="w-64 bg-gradient-to-b from-indigo-900 to-indigo-800 text-white h-screen fixed left-0 top-0 shadow-2xl">
-      <div className="p-6">
-        <div className="flex items-center gap-3 mb-8">
-          <Shield className="w-10 h-10" />
-          <div>
-            <h1 className="text-xl font-bold">SecureDev</h1>
-            <p className="text-xs text-indigo-300">Dashboard</p>
+    <>
+      {/* Overlay para móvil */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        fixed lg:sticky top-0 left-0 h-screen z-50
+        w-64 bg-gradient-to-b from-slate-900/95 to-slate-800/95
+        backdrop-blur-xl border-r border-white/10
+        text-white shadow-2xl
+        transform transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        <div className="p-6">
+          {/* Header con botón de cierre móvil */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <Shield className="w-10 h-10 text-indigo-400" />
+              <div>
+                <h1 className="text-xl font-bold">SecureDev</h1>
+                <p className="text-xs text-indigo-300">Dashboard</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="lg:hidden text-white/70 hover:text-white"
+            >
+              <X className="w-6 h-6" />
+            </button>
           </div>
+          
+          <nav className="space-y-2">
+            {menuItems.map(item => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setCurrentPage(item.id);
+                    setIsOpen(false); // Cerrar sidebar en móvil al navegar
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    currentPage === item.id
+                      ? 'bg-white/20 backdrop-blur-sm text-white shadow-lg border border-white/20'
+                      : 'text-indigo-100 hover:bg-white/10 hover:backdrop-blur-sm'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                </button>
+              );
+            })}
+          </nav>
         </div>
         
-        <nav className="space-y-2">
-          {menuItems.map(item => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setCurrentPage(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                  currentPage === item.id
-                    ? 'bg-white text-indigo-900 shadow-lg'
-                    : 'text-indigo-100 hover:bg-indigo-700'
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-      
-      <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-indigo-700">
-        <div className="flex items-center gap-2 text-xs text-indigo-300">
-          <Lock className="w-4 h-4" />
-          <span>Modo Defensivo</span>
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 bg-black/20 backdrop-blur-sm">
+          <div className="flex items-center gap-2 text-xs text-indigo-300">
+            <Lock className="w-4 h-4" />
+            <span>Modo Defensivo</span>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
+
+// Botón de menú móvil
+const MobileMenuButton = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="lg:hidden fixed top-4 left-4 z-30 p-3 bg-slate-900/90 backdrop-blur-xl rounded-lg border border-white/10 shadow-lg"
+  >
+    <Menu className="w-6 h-6 text-white" />
+  </button>
+);
 
 // Página de inicio
 const HomePage = () => {
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-12 text-white mb-8 shadow-xl">
-        <h1 className="text-5xl font-bold mb-4">Bienvenido a SecureDev Dashboard</h1>
-        <p className="text-xl text-indigo-100 mb-6">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl p-6 sm:p-12 text-white mb-8 shadow-2xl">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          Bienvenido a SecureDev Dashboard
+        </h1>
+        <p className="text-lg sm:text-xl text-indigo-100 mb-6">
           Plataforma educativa para escribir código más seguro mediante análisis defensivo
         </p>
-        <div className="flex gap-4">
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-4">
-            <div className="text-3xl font-bold">OWASP Top 10</div>
-            <div className="text-sm">Vulnerabilidades cubiertas</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 sm:px-6 py-4 border border-white/20">
+            <div className="text-2xl sm:text-3xl font-bold">OWASP Top 10</div>
+            <div className="text-xs sm:text-sm">Vulnerabilidades cubiertas</div>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-6 py-4">
-            <div className="text-3xl font-bold">OSV.dev</div>
-            <div className="text-sm">Base de datos de vulnerabilidades</div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 sm:px-6 py-4 border border-white/20">
+            <div className="text-2xl sm:text-3xl font-bold">OSV.dev</div>
+            <div className="text-xs sm:text-sm">Base de datos de vulnerabilidades</div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-indigo-100">
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-6 shadow-xl border border-white/10">
           <div className="flex items-center gap-3 mb-4">
-            <BookOpen className="w-8 h-8 text-indigo-600" />
-            <h2 className="text-2xl font-bold text-gray-800">Módulo Educativo</h2>
+            <BookOpen className="w-8 h-8 text-indigo-400" />
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Módulo Educativo</h2>
           </div>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-300 mb-4 text-sm sm:text-base">
             Aprende sobre las vulnerabilidades más críticas con ejemplos de código vulnerable y seguro.
           </p>
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-gray-300">
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
               <span>Explicaciones simples y claras</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
               <span>Ejemplos de código real</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
               <span>Soluciones y mitigaciones</span>
             </li>
           </ul>
         </div>
 
-        <div className="bg-white rounded-xl p-6 shadow-lg border border-purple-100">
+        <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-6 shadow-xl border border-white/10">
           <div className="flex items-center gap-3 mb-4">
-            <Search className="w-8 h-8 text-purple-600" />
-            <h2 className="text-2xl font-bold text-gray-800">Escáner de Dependencias</h2>
+            <Search className="w-8 h-8 text-purple-400" />
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Escáner de Dependencias</h2>
           </div>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-300 mb-4 text-sm sm:text-base">
             Analiza tu archivo package.json para detectar vulnerabilidades conocidas en tus dependencias.
           </p>
-          <ul className="space-y-2 text-sm text-gray-600">
+          <ul className="space-y-2 text-sm text-gray-300">
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
               <span>Escaneo en tiempo real con OSV.dev</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
               <span>Reporte detallado de severidad</span>
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
               <span>Enlaces a CVE y reportes</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-6">
+      {/* Warning Banner */}
+      <div className="bg-amber-900/20 backdrop-blur-xl border border-amber-500/30 rounded-lg p-4 sm:p-6">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
+          <AlertTriangle className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
           <div>
-            <h3 className="text-lg font-bold text-amber-900 mb-2">Aviso Ético</h3>
-            <p className="text-sm text-amber-800">
+            <h3 className="text-lg font-bold text-amber-200 mb-2">Aviso Ético</h3>
+            <p className="text-sm text-amber-100">
               Esta herramienta está diseñada estrictamente para fines educativos y defensivos. 
               Solo debe usarse para analizar proyectos de los que se es propietario o se tiene 
               permiso explícito para evaluar. El uso de técnicas de seguridad sin autorización es ilegal.
@@ -582,7 +626,7 @@ const HomePage = () => {
   );
 };
 
-// Tarjeta de vulnerabilidad
+// Tarjeta de vulnerabilidad con glassmorphism
 const VulnerabilityCard = ({ vuln, onClick }) => {
   const severityColors = {
     critical: 'from-red-500 to-red-600',
@@ -594,17 +638,17 @@ const VulnerabilityCard = ({ vuln, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all border border-gray-200 text-left w-full group"
+      className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-4 sm:p-6 shadow-xl hover:shadow-2xl transition-all border border-white/10 hover:border-white/20 text-left w-full group"
     >
-      <div className="flex items-start justify-between mb-3">
-        <h3 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3 mb-3">
+        <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-indigo-400 transition-colors">
           {vuln.name}
         </h3>
-        <span className={`px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${severityColors[vuln.severity]}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-bold text-white bg-gradient-to-r ${severityColors[vuln.severity]} flex-shrink-0`}>
           {vuln.severity.toUpperCase()}
         </span>
       </div>
-      <p className="text-sm text-gray-600">{vuln.description}</p>
+      <p className="text-sm text-gray-300">{vuln.description}</p>
     </button>
   );
 };
@@ -615,40 +659,42 @@ const VulnerabilityDetail = ({ vuln, onBack }) => {
 
   const tabs = [
     { id: 'whatIs', label: '¿Qué es?', icon: BookOpen },
-    { id: 'vulnerable', label: 'Código Vulnerable', icon: XCircle },
-    { id: 'secure', label: 'Código Seguro', icon: CheckCircle }
+    { id: 'vulnerable', label: 'Vulnerable', icon: XCircle },
+    { id: 'secure', label: 'Seguro', icon: CheckCircle }
   ];
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <button
         onClick={onBack}
-        className="mb-6 flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium"
+        className="mb-6 flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium text-sm sm:text-base"
       >
         ← Volver a la lista
       </button>
 
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-white">
-          <h1 className="text-4xl font-bold mb-3">{vuln.name}</h1>
-          <p className="text-lg text-indigo-100">{vuln.description}</p>
+      <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/10">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 sm:p-8 text-white">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3">{vuln.name}</h1>
+          <p className="text-base sm:text-lg text-indigo-100">{vuln.description}</p>
         </div>
 
-        <div className="border-b border-gray-200">
-          <div className="flex">
+        {/* Tabs */}
+        <div className="border-b border-white/10 bg-slate-900/60">
+          <div className="flex overflow-x-auto">
             {tabs.map(tab => {
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-6 py-4 font-medium transition-colors ${
+                  className={`flex items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 font-medium transition-colors whitespace-nowrap text-sm sm:text-base ${
                     activeTab === tab.id
-                      ? 'bg-white text-indigo-600 border-b-2 border-indigo-600'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                      ? 'bg-slate-800/60 text-indigo-400 border-b-2 border-indigo-400'
+                      : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/40'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                   {tab.label}
                 </button>
               );
@@ -656,22 +702,23 @@ const VulnerabilityDetail = ({ vuln, onBack }) => {
           </div>
         </div>
 
-        <div className="p-8">
+        {/* Content */}
+        <div className="p-4 sm:p-8">
           {activeTab === 'whatIs' && (
-            <div className="prose max-w-none">
-              <p className="text-lg text-gray-700 leading-relaxed">{vuln.whatIs}</p>
+            <div className="prose prose-invert max-w-none">
+              <p className="text-base sm:text-lg text-gray-200 leading-relaxed">{vuln.whatIs}</p>
             </div>
           )}
 
           {activeTab === 'vulnerable' && (
             <div>
-              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">
-                <div className="flex items-center gap-2 text-red-800 font-bold mb-2">
-                  <XCircle className="w-5 h-5" />
+              <div className="bg-red-900/20 backdrop-blur-sm border border-red-500/30 p-4 mb-4 rounded-lg">
+                <div className="flex items-center gap-2 text-red-300 font-bold mb-2 text-sm sm:text-base">
+                  <XCircle className="w-5 h-5 flex-shrink-0" />
                   Código Vulnerable - NO usar en producción
                 </div>
               </div>
-              <pre className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
+              <pre className="bg-black/60 backdrop-blur-sm text-gray-100 p-4 sm:p-6 rounded-lg overflow-x-auto text-xs sm:text-sm border border-white/10">
                 <code>{vuln.vulnerableCode}</code>
               </pre>
             </div>
@@ -679,13 +726,13 @@ const VulnerabilityDetail = ({ vuln, onBack }) => {
 
           {activeTab === 'secure' && (
             <div>
-              <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded">
-                <div className="flex items-center gap-2 text-green-800 font-bold mb-2">
-                  <CheckCircle className="w-5 h-5" />
+              <div className="bg-green-900/20 backdrop-blur-sm border border-green-500/30 p-4 mb-4 rounded-lg">
+                <div className="flex items-center gap-2 text-green-300 font-bold mb-2 text-sm sm:text-base">
+                  <CheckCircle className="w-5 h-5 flex-shrink-0" />
                   Código Seguro - Implementación recomendada
                 </div>
               </div>
-              <pre className="bg-gray-900 text-gray-100 p-6 rounded-lg overflow-x-auto">
+              <pre className="bg-black/60 backdrop-blur-sm text-gray-100 p-4 sm:p-6 rounded-lg overflow-x-auto text-xs sm:text-sm border border-white/10">
                 <code>{vuln.secureCode}</code>
               </pre>
             </div>
@@ -710,15 +757,15 @@ const EducationPage = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-3">Módulo Educativo</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">Módulo Educativo</h1>
+        <p className="text-base sm:text-lg text-gray-300">
           Aprende sobre las vulnerabilidades más críticas del OWASP Top 10 con ejemplos prácticos
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {vulnerabilitiesData.map(vuln => (
           <VulnerabilityCard
             key={vuln.id}
@@ -731,7 +778,7 @@ const EducationPage = () => {
   );
 };
 
-// Componente Dropzone
+// Componente Dropzone mejorado
 const FileDropzone = ({ onFileDrop }) => {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -788,17 +835,17 @@ const FileDropzone = ({ onFileDrop }) => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={`border-3 border-dashed rounded-2xl p-12 text-center transition-all ${
+      className={`border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center transition-all ${
         isDragging
-          ? 'border-indigo-600 bg-indigo-50'
-          : 'border-gray-300 bg-white hover:border-indigo-400 hover:bg-gray-50'
+          ? 'border-indigo-400 bg-indigo-900/20 backdrop-blur-xl'
+          : 'border-white/20 bg-slate-900/40 backdrop-blur-xl hover:border-indigo-400/50 hover:bg-slate-900/60'
       }`}
     >
-      <FileJson className="w-20 h-20 mx-auto mb-4 text-indigo-600" />
-      <h3 className="text-2xl font-bold text-gray-800 mb-2">
+      <FileJson className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 text-indigo-400" />
+      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
         Arrastra tu archivo package.json aquí
       </h3>
-      <p className="text-gray-600 mb-6">o haz clic para seleccionar un archivo</p>
+      <p className="text-gray-300 mb-6 text-sm sm:text-base">o haz clic para seleccionar un archivo</p>
       <label className="inline-block">
         <input
           type="file"
@@ -806,8 +853,8 @@ const FileDropzone = ({ onFileDrop }) => {
           onChange={handleFileInput}
           className="hidden"
         />
-        <span className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors cursor-pointer inline-flex items-center gap-2">
-          <Upload className="w-5 h-5" />
+        <span className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors cursor-pointer inline-flex items-center gap-2 text-sm sm:text-base">
+          <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
           Seleccionar archivo
         </span>
       </label>
@@ -815,88 +862,93 @@ const FileDropzone = ({ onFileDrop }) => {
   );
 };
 
-// Tabla de resultados
+// Tabla de resultados con glassmorphism oscuro
 const ResultsTable = ({ results }) => {
   const getSeverityColor = (severity) => {
-    if (!severity) return 'bg-gray-100 text-gray-800';
+    if (!severity) return 'bg-gray-700/50 text-gray-300';
     const sev = severity.toLowerCase();
-    if (sev.includes('critical')) return 'bg-red-100 text-red-800';
-    if (sev.includes('high')) return 'bg-orange-100 text-orange-800';
-    if (sev.includes('medium')) return 'bg-yellow-100 text-yellow-800';
-    return 'bg-blue-100 text-blue-800';
+    if (sev.includes('critical')) return 'bg-red-900/50 text-red-300';
+    if (sev.includes('high')) return 'bg-orange-900/50 text-orange-300';
+    if (sev.includes('medium')) return 'bg-yellow-900/50 text-yellow-300';
+    return 'bg-blue-900/50 text-blue-300';
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
-        <h2 className="text-2xl font-bold mb-3">Resultados del Escaneo</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <div className="text-3xl font-bold">{results.summary.total}</div>
-            <div className="text-sm">Paquetes analizados</div>
+    <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/10">
+      {/* Header con glassmorphism */}
+      <div className="bg-gradient-to-r from-indigo-600/90 to-purple-600/90 backdrop-blur-xl p-4 sm:p-6 text-white border-b border-white/10">
+        <h2 className="text-xl sm:text-2xl font-bold mb-3">Resultados del Escaneo</h2>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4">
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
+            <div className="text-2xl sm:text-3xl font-bold">{results.summary.total}</div>
+            <div className="text-xs sm:text-sm">Paquetes</div>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <div className="text-3xl font-bold">{results.summary.vulnerable}</div>
-            <div className="text-sm">Con vulnerabilidades</div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
+            <div className="text-2xl sm:text-3xl font-bold">{results.summary.vulnerable}</div>
+            <div className="text-xs sm:text-sm">Vulnerables</div>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <div className="text-3xl font-bold">{results.summary.safe}</div>
-            <div className="text-sm">Seguros</div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20">
+            <div className="text-2xl sm:text-3xl font-bold">{results.summary.safe}</div>
+            <div className="text-xs sm:text-sm">Seguros</div>
           </div>
         </div>
       </div>
 
+      {/* Tabla responsiva */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-slate-900/60 backdrop-blur-sm border-b border-white/10">
             <tr>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Estado</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Paquete</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Versión</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Vulnerabilidades</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Severidad</th>
-              <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">Detalles</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300">Estado</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300">Paquete</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300 hidden sm:table-cell">Versión</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300">Vulns</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300 hidden md:table-cell">Severidad</th>
+              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300 hidden lg:table-cell">Detalles</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-white/10">
             {results.packages.map((pkg, idx) => (
-              <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4">
+              <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   {pkg.status === 'vulnerable' && (
-                    <div className="flex items-center gap-2 text-red-600">
-                      <XCircle className="w-5 h-5" />
-                      <span className="font-medium">Vulnerable</span>
+                    <div className="flex items-center gap-2 text-red-400">
+                      <XCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="font-medium text-xs sm:text-sm hidden sm:inline">Vulnerable</span>
                     </div>
                   )}
                   {pkg.status === 'safe' && (
-                    <div className="flex items-center gap-2 text-green-600">
-                      <CheckCircle className="w-5 h-5" />
-                      <span className="font-medium">Seguro</span>
+                    <div className="flex items-center gap-2 text-green-400">
+                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="font-medium text-xs sm:text-sm hidden sm:inline">Seguro</span>
                     </div>
                   )}
                   {pkg.status === 'error' && (
-                    <div className="flex items-center gap-2 text-gray-600">
-                      <AlertTriangle className="w-5 h-5" />
-                      <span className="font-medium">Error</span>
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="font-medium text-xs sm:text-sm hidden sm:inline">Error</span>
                     </div>
                   )}
                 </td>
-                <td className="px-6 py-4 font-mono text-sm">{pkg.package}</td>
-                <td className="px-6 py-4 font-mono text-sm text-gray-600">{pkg.version}</td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                  <div className="font-mono text-xs sm:text-sm text-white break-all">{pkg.package}</div>
+                  <div className="font-mono text-xs text-gray-400 sm:hidden">{pkg.version}</div>
+                </td>
+                <td className="px-3 sm:px-6 py-3 sm:py-4 font-mono text-xs sm:text-sm text-gray-400 hidden sm:table-cell">{pkg.version}</td>
+                <td className="px-3 sm:px-6 py-3 sm:py-4">
                   {pkg.vulnerabilities.length > 0 ? (
-                    <span className="font-bold text-red-600">{pkg.vulnerabilities.length}</span>
+                    <span className="font-bold text-red-400 text-sm sm:text-base">{pkg.vulnerabilities.length}</span>
                   ) : (
-                    <span className="text-gray-400">0</span>
+                    <span className="text-gray-500 text-sm sm:text-base">0</span>
                   )}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
                   {pkg.vulnerabilities.length > 0 ? (
                     <div className="flex flex-wrap gap-1">
-                      {pkg.vulnerabilities.slice(0, 3).map((vuln, vidx) => (
+                      {pkg.vulnerabilities.slice(0, 2).map((vuln, vidx) => (
                         <span
                           key={vidx}
-                          className={`px-2 py-1 rounded text-xs font-medium ${getSeverityColor(
+                          className={`px-2 py-1 rounded text-xs font-medium backdrop-blur-sm ${getSeverityColor(
                             vuln.severity?.[0]?.score || vuln.database_specific?.severity
                           )}`}
                         >
@@ -905,10 +957,10 @@ const ResultsTable = ({ results }) => {
                       ))}
                     </div>
                   ) : (
-                    <span className="text-gray-400">-</span>
+                    <span className="text-gray-500">-</span>
                   )}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
                   {pkg.vulnerabilities.length > 0 && (
                     <div className="flex flex-col gap-1">
                       {pkg.vulnerabilities.slice(0, 2).map((vuln, vidx) => (
@@ -917,10 +969,10 @@ const ResultsTable = ({ results }) => {
                           href={vuln.references?.[0]?.url || vuln.database_specific?.url || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-indigo-600 hover:text-indigo-800 text-sm"
+                          className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-xs sm:text-sm"
                         >
-                          <ExternalLink className="w-4 h-4" />
-                          <span className="font-mono">{vuln.id || 'Ver más'}</span>
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <span className="font-mono truncate">{vuln.id || 'Ver más'}</span>
                         </a>
                       ))}
                     </div>
@@ -956,10 +1008,10 @@ const ScannerPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-3">Escáner de Dependencias</h1>
-        <p className="text-lg text-gray-600">
+        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">Escáner de Dependencias</h1>
+        <p className="text-base sm:text-lg text-gray-300">
           Analiza tu archivo package.json para detectar vulnerabilidades conocidas usando OSV.dev
         </p>
       </div>
@@ -968,26 +1020,26 @@ const ScannerPage = () => {
         <>
           <FileDropzone onFileDrop={handleFileDrop} />
           
-          <div className="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <h3 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
+          <div className="mt-8 bg-blue-900/20 backdrop-blur-xl border border-blue-500/30 rounded-xl p-4 sm:p-6">
+            <h3 className="text-base sm:text-lg font-bold text-blue-200 mb-3 flex items-center gap-2">
               <Code className="w-5 h-5" />
               Cómo usar el escáner
             </h3>
-            <ol className="space-y-2 text-blue-800">
+            <ol className="space-y-2 text-sm sm:text-base text-blue-100">
               <li className="flex items-start gap-2">
-                <span className="font-bold">1.</span>
-                <span>Localiza el archivo <code className="bg-blue-100 px-2 py-1 rounded">package.json</code> de tu proyecto Node.js</span>
+                <span className="font-bold flex-shrink-0">1.</span>
+                <span>Localiza el archivo <code className="bg-blue-800/40 px-2 py-1 rounded">package.json</code> de tu proyecto Node.js</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-bold">2.</span>
+                <span className="font-bold flex-shrink-0">2.</span>
                 <span>Arrastra el archivo a la zona de arriba o haz clic para seleccionarlo</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-bold">3.</span>
+                <span className="font-bold flex-shrink-0">3.</span>
                 <span>Espera mientras consultamos la base de datos de OSV.dev</span>
               </li>
               <li className="flex items-start gap-2">
-                <span className="font-bold">4.</span>
+                <span className="font-bold flex-shrink-0">4.</span>
                 <span>Revisa los resultados y toma acción sobre las vulnerabilidades encontradas</span>
               </li>
             </ol>
@@ -996,20 +1048,20 @@ const ScannerPage = () => {
       )}
 
       {loading && (
-        <div className="bg-white rounded-xl p-12 text-center shadow-lg">
-          <Loader className="w-16 h-16 mx-auto mb-4 text-indigo-600 animate-spin" />
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">Escaneando dependencias...</h3>
-          <p className="text-gray-600">Consultando la base de datos de OSV.dev</p>
+        <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-8 sm:p-12 text-center shadow-2xl border border-white/10">
+          <Loader className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-indigo-400 animate-spin" />
+          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Escaneando dependencias...</h3>
+          <p className="text-gray-300 text-sm sm:text-base">Consultando la base de datos de OSV.dev</p>
         </div>
       )}
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-          <div className="flex items-center gap-3 text-red-800">
-            <XCircle className="w-6 h-6" />
+        <div className="bg-red-900/20 backdrop-blur-xl border border-red-500/30 rounded-xl p-4 sm:p-6">
+          <div className="flex items-center gap-3 text-red-300">
+            <XCircle className="w-6 h-6 flex-shrink-0" />
             <div>
-              <h3 className="font-bold">Error al escanear</h3>
-              <p>{error}</p>
+              <h3 className="font-bold text-sm sm:text-base">Error al escanear</h3>
+              <p className="text-sm">{error}</p>
             </div>
           </div>
         </div>
@@ -1022,33 +1074,33 @@ const ScannerPage = () => {
           <div className="mt-6 flex justify-center">
             <button
               onClick={handleReset}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors"
+              className="bg-indigo-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors text-sm sm:text-base"
             >
               Escanear otro archivo
             </button>
           </div>
 
           {results.summary.vulnerable > 0 && (
-            <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl p-6">
-              <h3 className="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
+            <div className="mt-6 bg-amber-900/20 backdrop-blur-xl border border-amber-500/30 rounded-xl p-4 sm:p-6">
+              <h3 className="text-base sm:text-lg font-bold text-amber-200 mb-3 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5" />
                 Recomendaciones
               </h3>
-              <ul className="space-y-2 text-amber-800">
+              <ul className="space-y-2 text-sm sm:text-base text-amber-100">
                 <li className="flex items-start gap-2">
-                  <span>•</span>
+                  <span className="flex-shrink-0">•</span>
                   <span>Actualiza los paquetes vulnerables a versiones que no contengan las vulnerabilidades reportadas</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span>•</span>
+                  <span className="flex-shrink-0">•</span>
                   <span>Si no hay versión actualizada, considera usar un paquete alternativo</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span>•</span>
-                  <span>Ejecuta <code className="bg-amber-100 px-2 py-1 rounded">npm audit fix</code> para intentar arreglar automáticamente</span>
+                  <span className="flex-shrink-0">•</span>
+                  <span>Ejecuta <code className="bg-amber-800/40 px-2 py-1 rounded">npm audit fix</code> para intentar arreglar automáticamente</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span>•</span>
+                  <span className="flex-shrink-0">•</span>
                   <span>Revisa los enlaces a CVE para entender el impacto de cada vulnerabilidad</span>
                 </li>
               </ul>
@@ -1060,18 +1112,30 @@ const ScannerPage = () => {
   );
 };
 
-// Componente principal
+// Componente principal con sidebar responsivo
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      
-      <div className="ml-64 p-8">
-        {currentPage === 'home' && <HomePage />}
-        {currentPage === 'education' && <EducationPage />}
-        {currentPage === 'scanner' && <ScannerPage />}
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="flex">
+        <Sidebar 
+          currentPage={currentPage} 
+          setCurrentPage={setCurrentPage}
+          isOpen={isSidebarOpen}
+          setIsOpen={setIsSidebarOpen}
+        />
+        
+        <div className="flex-1 min-h-screen">
+          <MobileMenuButton onClick={() => setIsSidebarOpen(true)} />
+          
+          <main className="pt-16 lg:pt-0">
+            {currentPage === 'home' && <HomePage />}
+            {currentPage === 'education' && <EducationPage />}
+            {currentPage === 'scanner' && <ScannerPage />}
+          </main>
+        </div>
       </div>
     </div>
   );
