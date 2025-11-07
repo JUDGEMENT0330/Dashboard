@@ -1,149 +1,242 @@
-# 🛡️ SecureDev Dashboard
+# 🛡️ SecureDev Dashboard v2.0
 
-Plataforma educativa para escribir código más seguro mediante análisis defensivo. Incluye un módulo educativo sobre vulnerabilidades OWASP Top 10 y un escáner de dependencias que utiliza la API de OSV.dev.
+**Powered by [Cybervaltorix](https://cybervaltorix.com)**
 
-## 🚀 Características
+Plataforma educativa profesional para dominar la seguridad en desarrollo de software. Aprende, practica y evalúa tus conocimientos sobre vulnerabilidades OWASP Top 10.
 
-- **Módulo Educativo**: Aprende sobre las 8 vulnerabilidades más críticas del OWASP Top 10 con ejemplos de código vulnerable y seguro
-- **Escáner de Dependencias**: Analiza archivos package.json para detectar vulnerabilidades conocidas usando OSV.dev
-- **Interfaz Moderna**: Diseño responsive con Tailwind CSS y componentes interactivos
-- **100% Cliente**: No requiere backend, todo se ejecuta en el navegador
+![SecureDev Dashboard](https://img.shields.io/badge/version-2.0-blue)
+![React](https://img.shields.io/badge/React-18.2.0-61dafb)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## 📋 Requisitos Previos
+## ✨ Nuevas Características v2.0
 
+### 🎨 Interfaz Mejorada
+- **Logo de Cybervaltorix** integrado profesionalmente
+- Diseño moderno con animaciones y transiciones suaves
+- Interfaz totalmente responsive y optimizada
+- Sistema de colores mejorado con gradientes atractivos
+- Efectos glassmorphism y backdrop blur
+
+### 📚 Módulo Educativo Expandido
+- **8 vulnerabilidades OWASP** con contenido detallado
+- Explicaciones más profundas con ejemplos del mundo real
+- Recursos adicionales y enlaces a documentación oficial
+- Sistema de progreso de aprendizaje
+- Marcado de vulnerabilidades completadas
+
+### 🧠 Quiz Interactivo
+- **8 preguntas** diseñadas por expertos en seguridad
+- Explicaciones detalladas de cada respuesta
+- Sistema de puntuación y retroalimentación inmediata
+- Historial de intentos
+- Modo de revisión con respuestas correctas
+
+### 🧪 Laboratorio de Práctica
+- **Editor de código interactivo**
+- Ejercicios prácticos de programación segura
+- Sistema de hints y ayuda
+- Validación automática de soluciones
+- Posibilidad de ver la solución completa
+
+### 📊 Dashboard de Progreso
+- Seguimiento detallado de tu aprendizaje
+- Estadísticas visuales de progreso
+- Historial de quiz scores
+- Sistema de achievements (en desarrollo)
+- Opción de resetear progreso
+
+### 🔍 Escáner OSV.dev Mejorado
+- Interfaz más intuitiva
+- Resultados con más detalles
+- Recomendaciones de seguridad expandidas
+- Mejor visualización de severidad
+- Enlaces directos a CVEs
+
+## 🚀 Instalación y Uso
+
+### Requisitos Previos
 - Node.js 16+ o npm
-- Cuenta en Vercel (gratis)
+- Navegador web moderno
 
-## 🛠️ Instalación Local
+### Instalación Local
 
 1. **Clona o descarga el proyecto**
+
 2. **Instala las dependencias**:
    ```bash
    npm install
    ```
+
 3. **Inicia el servidor de desarrollo**:
    ```bash
    npm run dev
    ```
+
 4. **Abre tu navegador** en `http://localhost:5173`
 
 ## 🌐 Desplegar en Vercel
 
-### Opción 1: Despliegue desde la CLI (Recomendado)
+### Opción 1: Desde GitHub (Recomendado)
 
-1. **Instala Vercel CLI globalmente** (si no lo tienes):
-   ```bash
-   npm install -g vercel
-   ```
+1. **Sube el proyecto a GitHub**
 
-2. **Desde la carpeta del proyecto**, ejecuta:
-   ```bash
-   vercel
-   ```
+2. **Conecta con Vercel**:
+   - Ve a [vercel.com](https://vercel.com)
+   - Haz clic en "Add New Project"
+   - Importa tu repositorio de GitHub
+   - Vercel detectará automáticamente la configuración de Vite
 
-3. **Sigue las instrucciones**:
-   - Presiona Enter para confirmar el proyecto
-   - Selecciona tu cuenta/organización
-   - Confirma el nombre del proyecto
-   - Confirma la carpeta raíz (.)
-   - **NO** sobrescribas la configuración
+3. **Deploy**:
+   - Haz clic en "Deploy"
+   - Tu aplicación estará lista en segundos
 
-4. **Para desplegar a producción**:
-   ```bash
-   vercel --prod
-   ```
+### Opción 2: Usando Vercel CLI
 
-### Opción 2: Despliegue desde GitHub
+```bash
+# Instala Vercel CLI
+npm install -g vercel
 
-1. **Sube el código a GitHub**:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/tu-usuario/securedev-dashboard.git
-   git push -u origin main
-   ```
+# Despliega
+vercel
 
-2. **Ve a [vercel.com](https://vercel.com)**
+# Para producción
+vercel --prod
+```
 
-3. **Haz clic en "Add New Project"**
+## 📖 Estructura del Proyecto
 
-4. **Importa tu repositorio de GitHub**
+```
+securedev-dashboard/
+├── src/
+│   ├── App.jsx          # Componente principal con todas las páginas
+│   ├── main.jsx         # Punto de entrada
+│   └── index.css        # Estilos globales
+├── public/              # Archivos estáticos
+├── index.html          # HTML principal
+├── package.json        # Dependencias
+├── vite.config.js      # Configuración de Vite
+├── tailwind.config.js  # Configuración de Tailwind
+└── postcss.config.js   # Configuración de PostCSS
+```
 
-5. **Configura el proyecto**:
-   - Framework Preset: Vite
-   - Build Command: `npm run build` (ya configurado)
-   - Output Directory: `dist` (ya configurado)
-   - Install Command: `npm install` (ya configurado)
+## 🎯 Características Principales
 
-6. **Haz clic en "Deploy"**
+### 1. Módulo Educativo
+- **OWASP Top 10**: Broken Access Control, Cryptographic Failures, Injection, XSS, y más
+- **Ejemplos Reales**: Casos de uso del mundo real
+- **Código Vulnerable vs Seguro**: Comparación lado a lado
+- **Mitigaciones**: Cómo prevenir cada vulnerabilidad
+- **Recursos**: Enlaces a documentación oficial
 
-### Opción 3: Despliegue Drag & Drop
+### 2. Quiz Interactivo
+- Evalúa tu conocimiento
+- Preguntas basadas en escenarios reales
+- Explicaciones detalladas
+- Sistema de scoring
+- Retroalimentación inmediata
 
-1. **Construye el proyecto localmente**:
-   ```bash
-   npm run build
-   ```
+### 3. Laboratorio
+- Práctica de código seguro
+- Ejercicios interactivos
+- Sistema de hints
+- Validación automática
+- Soluciones completas
 
-2. **Ve a [vercel.com/new](https://vercel.com/new)**
+### 4. Escáner de Dependencias
+- Integración con OSV.dev
+- Análisis en tiempo real
+- Reportes detallados
+- Recomendaciones de seguridad
+- Enlaces a CVEs
 
-3. **Arrastra la carpeta `dist`** a la zona de despliegue
-
-4. **Espera a que termine el despliegue**
-
-## 📦 Scripts Disponibles
-
-- `npm run dev` - Inicia el servidor de desarrollo
-- `npm run build` - Construye la aplicación para producción
-- `npm run preview` - Previsualiza el build de producción
+### 5. Dashboard de Progreso
+- Seguimiento de aprendizaje
+- Estadísticas visuales
+- Historial completo
+- Sistema de achievements
+- Exportación de progreso (próximamente)
 
 ## 🔧 Tecnologías Utilizadas
 
-- **React 18** - Biblioteca de UI
-- **Vite** - Build tool y dev server
+- **React 18** - Framework de UI
+- **Vite** - Build tool ultrarrápido
 - **Tailwind CSS** - Framework de CSS utility-first
-- **Lucide React** - Iconos
+- **Lucide React** - Iconos modernos
 - **OSV.dev API** - Base de datos de vulnerabilidades
+- **LocalStorage** - Persistencia de progreso
 
-## 📖 Uso
+## 🎨 Personalización
 
-### Módulo Educativo
+### Colores
+Los colores principales se pueden modificar en `tailwind.config.js`:
+- Indigo: Elementos principales
+- Purple: Acentos secundarios
+- Pink: Elementos de énfasis
 
-1. Navega a la sección "Educación"
-2. Explora las diferentes vulnerabilidades del OWASP Top 10
-3. Haz clic en cualquier vulnerabilidad para ver:
-   - Explicación detallada
-   - Código vulnerable (ejemplo de lo que NO hacer)
-   - Código seguro (implementación recomendada)
+### Logo
+El logo de Cybervaltorix está integrado en el sidebar. Para cambiarlo, modifica la URL en `App.jsx`.
 
-### Escáner de Dependencias
+## 📱 Responsive Design
 
-1. Navega a la sección "Escáner"
-2. Arrastra tu archivo `package.json` o haz clic para seleccionarlo
-3. Espera mientras se escanean las dependencias
-4. Revisa el reporte de vulnerabilidades
-5. Sigue las recomendaciones para actualizar paquetes vulnerables
+El dashboard está completamente optimizado para:
+- 📱 Móviles (320px+)
+- 📱 Tablets (768px+)
+- 💻 Desktop (1024px+)
+- 🖥️ Large Desktop (1280px+)
 
 ## ⚠️ Aviso Ético
 
-Esta herramienta está diseñada estrictamente para fines educativos y defensivos. Solo debe usarse para analizar proyectos de los que se es propietario o se tiene permiso explícito para evaluar. El uso de técnicas de seguridad sin autorización es ilegal.
+Esta herramienta está diseñada estrictamente para fines educativos y defensivos. 
+
+**Uso Autorizado Únicamente:**
+- ✅ Análisis de tus propios proyectos
+- ✅ Proyectos con permiso explícito
+- ✅ Fines educativos y de capacitación
+- ❌ Pruebas no autorizadas
+- ❌ Acceso a sistemas sin permiso
+
+**El uso no autorizado de técnicas de seguridad es ilegal.**
+
+## 🤝 Créditos
+
+- **Desarrollado por**: [Cybervaltorix](https://cybervaltorix.com)
+- **OWASP Top 10**: [OWASP Foundation](https://owasp.org)
+- **OSV.dev**: [Google OSV](https://osv.dev)
+- **Iconos**: [Lucide](https://lucide.dev)
 
 ## 📄 Licencia
 
-Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+Este proyecto está bajo la licencia MIT. Ver el archivo LICENSE para más detalles.
 
-## 🤝 Contribuciones
+## 🔮 Roadmap
 
-Las contribuciones son bienvenidas. Por favor, abre un issue primero para discutir los cambios que te gustaría realizar.
+### Próximas Características
+- [ ] Más ejercicios de laboratorio
+- [ ] Sistema de achievements completo
+- [ ] Modo oscuro/claro
+- [ ] Exportación de reportes PDF
+- [ ] Integración con más APIs de seguridad
+- [ ] Soporte multi-idioma
+- [ ] Modo offline
+- [ ] Gamificación avanzada
 
 ## 📞 Soporte
 
-Si tienes problemas con el despliegue:
-- Revisa la [documentación de Vercel](https://vercel.com/docs)
-- Verifica que todas las dependencias estén instaladas correctamente
-- Asegúrate de que el build se complete sin errores localmente
+- **Website**: [cybervaltorix.com](https://cybervaltorix.com)
+- **Issues**: Reporta problemas en GitHub
+- **Documentación**: README.md y código comentado
+
+## 🌟 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+1. Fork el proyecto
+2. Crea una rama para tu feature
+3. Commit tus cambios
+4. Push a la rama
+5. Abre un Pull Request
 
 ---
 
-**Hecho con ❤️ para la comunidad de desarrolladores**
+**Hecho con ❤️ por [Cybervaltorix](https://cybervaltorix.com)**
+
+*SecureDev Dashboard - Aprende seguridad escribiendo código más seguro*
