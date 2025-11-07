@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Shield, BookOpen, Search, AlertTriangle, CheckCircle, XCircle, Upload, Loader, ExternalLink, Lock, Code, FileJson, Menu, X, Award, Target, TrendingUp, Brain, Play, RotateCcw, Trophy, Star, Book, Lightbulb, GraduationCap, Zap, ChevronRight, ChevronLeft, CheckSquare, XSquare } from 'lucide-react';
+import { Shield, BookOpen, Search, AlertTriangle, CheckCircle, XCircle, Upload, Loader, ExternalLink, Lock, Code, FileJson, Menu, X, Award, Target, TrendingUp, Brain, Play, RotateCcw, Trophy, Star, Book, Lightbulb, GraduationCap, Zap, ChevronRight, ChevronLeft, CheckSquare, XSquare, Eye } from 'lucide-react';
 
 // ========================
 // DATOS EDUCATIVOS EXPANDIDOS
@@ -1234,7 +1234,7 @@ const EducationPage = ({ progress, markVulnerabilityCompleted }) => {
   );
 };
 
-// Página de Quiz mejorada
+// Página de Quiz mejorada y totalmente responsiva
 const QuizPage = ({ saveQuizScore }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -1286,58 +1286,60 @@ const QuizPage = ({ saveQuizScore }) => {
     const passed = percentage >= 70;
 
     return (
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
-        <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/10">
-          <div className={`p-6 sm:p-8 text-white ${passed ? 'bg-gradient-to-r from-green-600 to-emerald-600' : 'bg-gradient-to-r from-orange-600 to-red-600'}`}>
-            <div className="flex items-center justify-center mb-4">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade-in">
+        <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-white/10">
+          <div className={`p-4 sm:p-6 lg:p-8 text-white ${passed ? 'bg-gradient-to-r from-green-600 to-emerald-600' : 'bg-gradient-to-r from-orange-600 to-red-600'}`}>
+            <div className="flex items-center justify-center mb-3 sm:mb-4">
               {passed ? (
-                <Trophy className="w-16 h-16 text-yellow-300 animate-bounce" />
+                <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-yellow-300 animate-bounce" />
               ) : (
-                <Target className="w-16 h-16" />
+                <Target className="w-12 h-12 sm:w-16 sm:h-16" />
               )}
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-center mb-3">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 sm:mb-3">
               {passed ? '¡Felicitaciones!' : 'Sigue Practicando'}
             </h1>
-            <p className="text-lg text-center">
+            <p className="text-sm sm:text-base lg:text-lg text-center">
               {passed 
                 ? 'Has demostrado un excelente conocimiento en seguridad' 
                 : 'La práctica hace al maestro. Revisa los temas y vuelve a intentarlo'}
             </p>
           </div>
 
-          <div className="p-6 sm:p-8">
-            <div className="text-center mb-8">
-              <div className="text-6xl font-bold text-white mb-2">{score}/{quizQuestions.length}</div>
-              <div className="text-2xl text-gray-300">{Math.round(percentage)}% Correcto</div>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-2">{score}/{quizQuestions.length}</div>
+              <div className="text-xl sm:text-2xl text-gray-300">{Math.round(percentage)}% Correcto</div>
             </div>
 
-            <div className="space-y-4 mb-8">
+            <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8 max-h-[60vh] overflow-y-auto pr-2">
               {quizQuestions.map((question) => {
                 const userAnswer = selectedAnswers[question.id];
                 const isCorrect = userAnswer === question.correctAnswer;
 
                 return (
-                  <div key={question.id} className="bg-slate-800/40 rounded-lg p-4 border border-white/10">
-                    <div className="flex items-start gap-3 mb-3">
+                  <div key={question.id} className="bg-slate-800/40 rounded-lg p-3 sm:p-4 border border-white/10">
+                    <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
                       {isCorrect ? (
-                        <CheckSquare className="w-6 h-6 text-green-400 flex-shrink-0 mt-1" />
+                        <CheckSquare className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0 mt-0.5 sm:mt-1" />
                       ) : (
-                        <XSquare className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" />
+                        <XSquare className="w-5 h-5 sm:w-6 sm:h-6 text-red-400 flex-shrink-0 mt-0.5 sm:mt-1" />
                       )}
-                      <div className="flex-1">
-                        <h3 className="text-white font-medium mb-2">{question.question}</h3>
-                        <div className="text-sm">
-                          <div className={`mb-1 ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                            Tu respuesta: {question.options[userAnswer]}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm sm:text-base text-white font-medium mb-2 break-words">{question.question}</h3>
+                        <div className="text-xs sm:text-sm space-y-1 sm:space-y-2">
+                          <div className={`${isCorrect ? 'text-green-400' : 'text-red-400'} break-words`}>
+                            <span className="font-semibold">Tu respuesta: </span>
+                            {question.options[userAnswer]}
                           </div>
                           {!isCorrect && (
-                            <div className="text-green-400 mb-2">
-                              Respuesta correcta: {question.options[question.correctAnswer]}
+                            <div className="text-green-400 break-words">
+                              <span className="font-semibold">Correcta: </span>
+                              {question.options[question.correctAnswer]}
                             </div>
                           )}
-                          <div className="text-gray-400 mt-2 p-3 bg-slate-900/60 rounded">
-                            <strong>Explicación:</strong> {question.explanation}
+                          <div className="text-gray-400 mt-2 p-2 sm:p-3 bg-slate-900/60 rounded text-xs sm:text-sm break-words">
+                            <strong className="text-gray-300">Explicación: </strong>{question.explanation}
                           </div>
                         </div>
                       </div>
@@ -1347,12 +1349,12 @@ const QuizPage = ({ saveQuizScore }) => {
               })}
             </div>
 
-            <div className="flex gap-4 justify-center">
+            <div className="flex justify-center">
               <button
                 onClick={resetQuiz}
-                className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all"
+                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-all text-sm sm:text-base"
               >
-                <RotateCcw className="w-5 h-5" />
+                <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
                 Intentar de Nuevo
               </button>
             </div>
@@ -1366,22 +1368,24 @@ const QuizPage = ({ saveQuizScore }) => {
   const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
-      <div className="mb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 flex items-center gap-3">
-          <Brain className="w-10 h-10 text-purple-400" />
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade-in">
+      <div className="mb-4 sm:mb-6">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+          <Brain className="w-8 h-8 sm:w-10 sm:h-10 text-purple-400" />
           Quiz de Seguridad
         </h1>
-        <p className="text-base sm:text-lg text-gray-300">
+        <p className="text-sm sm:text-base lg:text-lg text-gray-300">
           Pon a prueba tu conocimiento sobre vulnerabilidades de seguridad
         </p>
       </div>
 
       {/* Barra de progreso del quiz */}
-      <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-4 mb-6 border border-white/10">
+      <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-3 sm:p-4 mb-4 sm:mb-6 border border-white/10">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-300">Pregunta {currentQuestion + 1} de {quizQuestions.length}</span>
-          <span className="text-sm font-bold text-purple-400">{Math.round(progress)}%</span>
+          <span className="text-xs sm:text-sm text-gray-300">
+            Pregunta <span className="font-bold">{currentQuestion + 1}</span> de <span className="font-bold">{quizQuestions.length}</span>
+          </span>
+          <span className="text-xs sm:text-sm font-bold text-purple-400">{Math.round(progress)}%</span>
         </div>
         <div className="w-full bg-slate-700/50 rounded-full h-2 overflow-hidden">
           <div 
@@ -1392,57 +1396,57 @@ const QuizPage = ({ saveQuizScore }) => {
       </div>
 
       {/* Pregunta */}
-      <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/10">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 sm:p-8 text-white">
-          <h2 className="text-xl sm:text-2xl font-bold">{question.question}</h2>
+      <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-white/10">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 sm:p-6 lg:p-8 text-white">
+          <h2 className="text-base sm:text-lg lg:text-2xl font-bold break-words">{question.question}</h2>
         </div>
 
-        <div className="p-6 sm:p-8">
-          <div className="space-y-3 mb-8">
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
             {question.options.map((option, index) => (
               <button
                 key={index}
                 onClick={() => handleAnswer(question.id, index)}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                className={`w-full text-left p-3 sm:p-4 rounded-lg border-2 transition-all ${
                   selectedAnswers[question.id] === index
                     ? 'border-purple-500 bg-purple-500/20 text-white'
                     : 'border-white/10 bg-slate-800/40 text-gray-300 hover:border-purple-500/50 hover:bg-slate-800/60'
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5 ${
                     selectedAnswers[question.id] === index
                       ? 'border-purple-500 bg-purple-500'
                       : 'border-gray-500'
                   }`}>
                     {selectedAnswers[question.id] === index && (
-                      <CheckCircle className="w-4 h-4 text-white" />
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                     )}
                   </div>
-                  <span className="flex-1">{option}</span>
+                  <span className="flex-1 text-sm sm:text-base break-words">{option}</span>
                 </div>
               </button>
             ))}
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <button
               onClick={handlePrevious}
               disabled={currentQuestion === 0}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+              className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base ${
                 currentQuestion === 0
                   ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                   : 'bg-slate-700 text-white hover:bg-slate-600'
               }`}
             >
-              <ChevronLeft className="w-5 h-5" />
-              Anterior
+              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Anterior</span>
             </button>
 
             <button
               onClick={handleNext}
               disabled={selectedAnswers[question.id] === undefined}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all ${
+              className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base ${
                 selectedAnswers[question.id] === undefined
                   ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                   : currentQuestion === quizQuestions.length - 1
@@ -1450,11 +1454,11 @@ const QuizPage = ({ saveQuizScore }) => {
                   : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700'
               }`}
             >
-              {currentQuestion === quizQuestions.length - 1 ? 'Finalizar' : 'Siguiente'}
+              <span>{currentQuestion === quizQuestions.length - 1 ? 'Finalizar' : 'Siguiente'}</span>
               {currentQuestion === quizQuestions.length - 1 ? (
-                <Target className="w-5 h-5" />
+                <Target className="w-4 h-4 sm:w-5 sm:h-5" />
               ) : (
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               )}
             </button>
           </div>
@@ -1464,11 +1468,12 @@ const QuizPage = ({ saveQuizScore }) => {
   );
 };
 
-// Página de Laboratorio (nuevo)
+// Página de Laboratorio (nuevo) - Corregido y totalmente responsivo
 const LabPage = () => {
   const [activeExercise, setActiveExercise] = useState(null);
   const [userCode, setUserCode] = useState('');
   const [feedback, setFeedback] = useState(null);
+  const [showSolution, setShowSolution] = useState(false);
 
   const exercises = [
     {
@@ -1485,7 +1490,8 @@ app.post('/login', async (req, res) => {
 app.post('/login', async (req, res) => {
   const query = 'SELECT * FROM users WHERE username = ?';
   const user = await db.query(query, [req.body.username]);
-});`
+});`,
+      keywords: ['?', 'parametrizada', 'query']
     },
     {
       id: 2,
@@ -1504,7 +1510,26 @@ app.get('/api/user/:id/profile', authenticateUser, async (req, res) => {
   }
   const profile = await getUserProfile(req.params.id);
   res.json(profile);
-});`
+});`,
+      keywords: ['req.user.id', 'req.params.id', '!==', '403']
+    },
+    {
+      id: 3,
+      title: 'Prevenir XSS',
+      description: 'Corrige este código para prevenir ataques de Cross-Site Scripting',
+      vulnerableCode: `// Código vulnerable
+function displayComment(comment) {
+  document.getElementById('comments').innerHTML += 
+    '<div>' + comment.text + '</div>';
+}`,
+      hint: 'Usa textContent en lugar de innerHTML, o createElement',
+      solution: `// Código seguro
+function displayComment(comment) {
+  const div = document.createElement('div');
+  div.textContent = comment.text;
+  document.getElementById('comments').appendChild(div);
+}`,
+      keywords: ['textContent', 'createElement', 'appendChild']
     }
   ];
 
@@ -1512,134 +1537,262 @@ app.get('/api/user/:id/profile', authenticateUser, async (req, res) => {
     if (!activeExercise) return;
     
     const exercise = exercises.find(e => e.id === activeExercise);
-    // Simulación simple de validación
-    const isCorrect = userCode.includes('?') || userCode.includes('req.user.id');
+    if (!exercise) return;
+    
+    // Validación mejorada - busca palabras clave
+    const hasKeywords = exercise.keywords.some(keyword => 
+      userCode.toLowerCase().includes(keyword.toLowerCase())
+    );
+    
+    const isCorrect = hasKeywords;
     
     setFeedback({
       correct: isCorrect,
       message: isCorrect 
         ? '¡Excelente! Has implementado correctamente la solución de seguridad.' 
-        : 'Intenta de nuevo. Revisa el hint para obtener ayuda.'
+        : 'Intenta de nuevo. Revisa el hint para obtener ayuda. Asegúrate de usar las técnicas correctas de seguridad.'
     });
+
+    if (isCorrect) {
+      setShowSolution(false);
+    }
+  };
+
+  const handleReset = () => {
+    const exercise = exercises.find(e => e.id === activeExercise);
+    if (exercise) {
+      setUserCode(exercise.vulnerableCode);
+      setFeedback(null);
+      setShowSolution(false);
+    }
+  };
+
+  const toggleSolution = () => {
+    const exercise = exercises.find(e => e.id === activeExercise);
+    if (exercise) {
+      if (!showSolution) {
+        setUserCode(exercise.solution);
+        setShowSolution(true);
+        setFeedback(null);
+      } else {
+        setUserCode(exercise.vulnerableCode);
+        setShowSolution(false);
+        setFeedback(null);
+      }
+    }
   };
 
   if (!activeExercise) {
     return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3 flex items-center gap-3">
-            <Code className="w-10 h-10 text-pink-400" />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade-in">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+            <Code className="w-8 h-8 sm:w-10 sm:h-10 text-pink-400" />
             Laboratorio de Práctica
           </h1>
-          <p className="text-base sm:text-lg text-gray-300">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-300">
             Practica escribiendo código seguro en un entorno controlado
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           {exercises.map((exercise) => (
             <div
               key={exercise.id}
-              className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+              className="bg-slate-900/40 backdrop-blur-xl rounded-xl p-4 sm:p-6 shadow-xl border border-white/10 hover:border-white/20 transition-all cursor-pointer group hover:scale-[1.02]"
               onClick={() => {
                 setActiveExercise(exercise.id);
                 setUserCode(exercise.vulnerableCode);
                 setFeedback(null);
+                setShowSolution(false);
               }}
             >
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">
-                {exercise.title}
-              </h3>
-              <p className="text-gray-300 mb-4">{exercise.description}</p>
-              <div className="flex items-center gap-2 text-sm text-pink-400">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-indigo-400 transition-colors">
+                  {exercise.title}
+                </h3>
+                <div className="bg-pink-500/20 px-2 sm:px-3 py-1 rounded-full">
+                  <span className="text-xs sm:text-sm font-bold text-pink-400">#{exercise.id}</span>
+                </div>
+              </div>
+              <p className="text-sm sm:text-base text-gray-300 mb-4">{exercise.description}</p>
+              <div className="flex items-center gap-2 text-sm text-pink-400 group-hover:gap-3 transition-all">
                 <Play className="w-4 h-4" />
-                <span>Iniciar ejercicio</span>
+                <span className="font-medium">Iniciar ejercicio</span>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Info adicional */}
+        <div className="mt-6 sm:mt-8 bg-gradient-to-r from-indigo-900/20 to-purple-900/20 backdrop-blur-xl border border-indigo-500/30 rounded-xl p-4 sm:p-6">
+          <h3 className="text-base sm:text-lg font-bold text-indigo-200 mb-3 flex items-center gap-2">
+            <Lightbulb className="w-5 h-5" />
+            Consejos para el Laboratorio
+          </h3>
+          <ul className="space-y-2 text-xs sm:text-sm text-indigo-100">
+            <li className="flex items-start gap-2">
+              <CheckCircle className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+              <span>Lee cuidadosamente la descripción del ejercicio</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+              <span>Usa las pistas si te atascas</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+              <span>Intenta resolverlo antes de ver la solución</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+              <span>Experimenta con diferentes enfoques</span>
+            </li>
+          </ul>
         </div>
       </div>
     );
   }
 
   const exercise = exercises.find(e => e.id === activeExercise);
+  if (!exercise) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 animate-fade-in">
       <button
         onClick={() => {
           setActiveExercise(null);
           setUserCode('');
           setFeedback(null);
+          setShowSolution(false);
         }}
-        className="mb-6 flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium"
+        className="mb-4 sm:mb-6 flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-medium text-sm sm:text-base transition-all hover:gap-3"
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         Volver a ejercicios
       </button>
 
-      <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/10 mb-6">
-        <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-6 text-white">
-          <h1 className="text-2xl font-bold mb-2">{exercise.title}</h1>
-          <p className="text-pink-100">{exercise.description}</p>
+      <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden border border-white/10 mb-4 sm:mb-6">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-pink-600 to-purple-600 p-4 sm:p-6 text-white">
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <h1 className="text-xl sm:text-2xl font-bold">{exercise.title}</h1>
+            <div className="bg-white/20 px-2 sm:px-3 py-1 rounded-full flex-shrink-0">
+              <span className="text-xs sm:text-sm font-bold">#{exercise.id}</span>
+            </div>
+          </div>
+          <p className="text-sm sm:text-base text-pink-100">{exercise.description}</p>
         </div>
 
-        <div className="p-6">
-          <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4 mb-4">
-            <div className="flex items-start gap-2">
-              <Lightbulb className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
-              <div>
-                <div className="text-blue-300 font-bold mb-1">Pista</div>
-                <div className="text-blue-100 text-sm">{exercise.hint}</div>
+        {/* Content */}
+        <div className="p-4 sm:p-6">
+          {/* Pista */}
+          <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-3 sm:p-4 mb-4">
+            <div className="flex items-start gap-2 sm:gap-3">
+              <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <div className="text-blue-300 font-bold mb-1 text-sm sm:text-base">💡 Pista</div>
+                <div className="text-blue-100 text-xs sm:text-sm">{exercise.hint}</div>
               </div>
             </div>
           </div>
 
+          {/* Editor de código */}
           <div className="mb-4">
-            <label className="block text-white font-medium mb-2">Tu Código:</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-white font-medium text-sm sm:text-base">
+                {showSolution ? '✅ Solución:' : '📝 Tu Código:'}
+              </label>
+              {showSolution && (
+                <span className="text-xs sm:text-sm text-green-400 font-medium">
+                  Código Seguro
+                </span>
+              )}
+            </div>
             <textarea
               value={userCode}
               onChange={(e) => setUserCode(e.target.value)}
-              className="w-full h-64 bg-black/60 text-gray-100 p-4 rounded-lg font-mono text-sm border border-white/10 focus:border-indigo-500 focus:outline-none"
+              className="w-full h-48 sm:h-64 lg:h-80 bg-black/60 text-gray-100 p-3 sm:p-4 rounded-lg font-mono text-xs sm:text-sm border border-white/10 focus:border-indigo-500 focus:outline-none resize-none"
               placeholder="Escribe tu solución aquí..."
+              spellCheck="false"
             />
           </div>
 
+          {/* Feedback */}
           {feedback && (
-            <div className={`p-4 rounded-lg mb-4 ${
+            <div className={`p-3 sm:p-4 rounded-lg mb-4 animate-fade-in ${
               feedback.correct 
                 ? 'bg-green-900/20 border border-green-500/30' 
                 : 'bg-orange-900/20 border border-orange-500/30'
             }`}>
-              <div className="flex items-center gap-2">
+              <div className="flex items-start gap-2 sm:gap-3">
                 {feedback.correct ? (
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
                 ) : (
-                  <XCircle className="w-5 h-5 text-orange-400" />
+                  <XCircle className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                 )}
-                <span className={feedback.correct ? 'text-green-300' : 'text-orange-300'}>
+                <span className={`text-sm sm:text-base ${feedback.correct ? 'text-green-300' : 'text-orange-300'}`}>
                   {feedback.message}
                 </span>
               </div>
             </div>
           )}
 
-          <div className="flex gap-4">
+          {/* Botones de acción */}
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={checkSolution}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-medium transition-all"
+              disabled={showSolution}
+              className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all text-sm sm:text-base ${
+                showSolution
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white'
+              }`}
             >
-              <CheckCircle className="w-5 h-5" />
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5" />
               Verificar Solución
             </button>
             
             <button
-              onClick={() => setUserCode(exercise.solution)}
-              className="flex items-center gap-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-all"
+              onClick={toggleSolution}
+              className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all text-sm sm:text-base"
             >
-              <Eye className="w-5 h-5" />
-              Ver Solución
+              <Eye className="w-4 h-4 sm:w-5 sm:h-5" />
+              {showSolution ? 'Ocultar Solución' : 'Ver Solución'}
             </button>
+
+            <button
+              onClick={handleReset}
+              className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-all text-sm sm:text-base"
+            >
+              <RotateCcw className="w-4 h-4 sm:w-5 sm:h-5" />
+              Reiniciar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Tips adicionales */}
+      <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 backdrop-blur-xl border border-purple-500/30 rounded-xl p-4 sm:p-6">
+        <h3 className="text-base sm:text-lg font-bold text-purple-200 mb-3 flex items-center gap-2">
+          <Star className="w-5 h-5" />
+          Tips de Seguridad
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="bg-purple-900/20 rounded-lg p-3">
+            <h4 className="text-sm font-bold text-purple-300 mb-1">✅ Hacer</h4>
+            <ul className="text-xs text-purple-100 space-y-1">
+              <li>• Validar todas las entradas</li>
+              <li>• Usar consultas parametrizadas</li>
+              <li>• Implementar autenticación</li>
+            </ul>
+          </div>
+          <div className="bg-red-900/20 rounded-lg p-3">
+            <h4 className="text-sm font-bold text-red-300 mb-1">❌ Evitar</h4>
+            <ul className="text-xs text-red-100 space-y-1">
+              <li>• Concatenar strings en SQL</li>
+              <li>• Confiar en datos del cliente</li>
+              <li>• Usar innerHTML sin sanitizar</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -1862,7 +2015,7 @@ const FileDropzone = ({ onFileDrop }) => {
   );
 };
 
-// Tabla de resultados mejorada
+// Tabla de resultados mejorada y totalmente responsiva
 const ResultsTable = ({ results }) => {
   const getSeverityColor = (severity) => {
     if (!severity) return 'bg-gray-700/50 text-gray-300';
@@ -1877,75 +2030,150 @@ const ResultsTable = ({ results }) => {
     <div className="bg-slate-900/40 backdrop-blur-xl rounded-xl shadow-2xl overflow-hidden border border-white/10 animate-fade-in">
       {/* Header mejorado */}
       <div className="bg-gradient-to-r from-indigo-600/90 to-purple-600/90 backdrop-blur-xl p-4 sm:p-6 text-white border-b border-white/10">
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center gap-2">
-          <Target className="w-6 h-6" />
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-3 sm:mb-4 flex items-center gap-2">
+          <Target className="w-5 h-5 sm:w-6 sm:h-6" />
           Resultados del Escaneo
         </h2>
         <div className="grid grid-cols-3 gap-2 sm:gap-4">
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20 hover:scale-105 transition-transform">
-            <div className="text-2xl sm:text-3xl font-bold">{results.summary.total}</div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3 lg:p-4 border border-white/20 hover:scale-105 transition-transform">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold">{results.summary.total}</div>
             <div className="text-xs sm:text-sm">Paquetes</div>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20 hover:scale-105 transition-transform">
-            <div className="text-2xl sm:text-3xl font-bold text-red-300">{results.summary.vulnerable}</div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3 lg:p-4 border border-white/20 hover:scale-105 transition-transform">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-300">{results.summary.vulnerable}</div>
             <div className="text-xs sm:text-sm">Vulnerables</div>
           </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3 sm:p-4 border border-white/20 hover:scale-105 transition-transform">
-            <div className="text-2xl sm:text-3xl font-bold text-green-300">{results.summary.safe}</div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2 sm:p-3 lg:p-4 border border-white/20 hover:scale-105 transition-transform">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-300">{results.summary.safe}</div>
             <div className="text-xs sm:text-sm">Seguros</div>
           </div>
         </div>
       </div>
 
-      {/* Tabla responsiva */}
-      <div className="overflow-x-auto">
+      {/* Tabla responsiva - Vista móvil con cards */}
+      <div className="block lg:hidden">
+        <div className="divide-y divide-white/10">
+          {results.packages.map((pkg, idx) => (
+            <div key={idx} className="p-4 hover:bg-slate-800/40 transition-colors">
+              {/* Estado */}
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  {pkg.status === 'vulnerable' && (
+                    <>
+                      <XCircle className="w-5 h-5 text-red-400 animate-pulse flex-shrink-0" />
+                      <span className="text-sm font-medium text-red-400">Vulnerable</span>
+                    </>
+                  )}
+                  {pkg.status === 'safe' && (
+                    <>
+                      <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                      <span className="text-sm font-medium text-green-400">Seguro</span>
+                    </>
+                  )}
+                  {pkg.status === 'error' && (
+                    <>
+                      <AlertTriangle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                      <span className="text-sm font-medium text-gray-400">Error</span>
+                    </>
+                  )}
+                </div>
+                {pkg.vulnerabilities.length > 0 && (
+                  <span className="bg-red-900/40 px-2 py-1 rounded text-xs font-bold text-red-300">
+                    {pkg.vulnerabilities.length} Vulns
+                  </span>
+                )}
+              </div>
+
+              {/* Paquete y versión */}
+              <div className="mb-3">
+                <div className="font-mono text-sm text-white break-all mb-1">{pkg.package}</div>
+                <div className="font-mono text-xs text-gray-400">v{pkg.version}</div>
+              </div>
+
+              {/* Severidad y detalles */}
+              {pkg.vulnerabilities.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex flex-wrap gap-1">
+                    {pkg.vulnerabilities.slice(0, 3).map((vuln, vidx) => (
+                      <span
+                        key={vidx}
+                        className={`px-2 py-1 rounded text-xs font-medium backdrop-blur-sm ${getSeverityColor(
+                          vuln.severity?.[0]?.score || vuln.database_specific?.severity
+                        )}`}
+                      >
+                        {vuln.severity?.[0]?.score || vuln.database_specific?.severity || 'N/A'}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {pkg.vulnerabilities.slice(0, 2).map((vuln, vidx) => (
+                      <a
+                        key={vidx}
+                        href={vuln.references?.[0]?.url || vuln.database_specific?.url || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-xs transition-all hover:gap-2"
+                      >
+                        <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                        <span className="font-mono truncate">{vuln.id || 'Ver más'}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tabla desktop */}
+      <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
           <thead className="bg-slate-900/60 backdrop-blur-sm border-b border-white/10">
             <tr>
-              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300">Estado</th>
-              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300">Paquete</th>
-              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300 hidden sm:table-cell">Versión</th>
-              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300">Vulns</th>
-              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300 hidden md:table-cell">Severidad</th>
-              <th className="px-3 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-bold text-gray-300 hidden lg:table-cell">Detalles</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-300">Estado</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-300">Paquete</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-300">Versión</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-300">Vulns</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-300">Severidad</th>
+              <th className="px-6 py-4 text-left text-sm font-bold text-gray-300">Detalles</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-white/10">
             {results.packages.map((pkg, idx) => (
               <tr key={idx} className="hover:bg-slate-800/40 transition-colors">
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                <td className="px-6 py-4">
                   {pkg.status === 'vulnerable' && (
                     <div className="flex items-center gap-2 text-red-400">
-                      <XCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 animate-pulse" />
-                      <span className="font-medium text-xs sm:text-sm hidden sm:inline">Vulnerable</span>
+                      <XCircle className="w-5 h-5 flex-shrink-0 animate-pulse" />
+                      <span className="font-medium text-sm">Vulnerable</span>
                     </div>
                   )}
                   {pkg.status === 'safe' && (
                     <div className="flex items-center gap-2 text-green-400">
-                      <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="font-medium text-xs sm:text-sm hidden sm:inline">Seguro</span>
+                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                      <span className="font-medium text-sm">Seguro</span>
                     </div>
                   )}
                   {pkg.status === 'error' && (
                     <div className="flex items-center gap-2 text-gray-400">
-                      <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                      <span className="font-medium text-xs sm:text-sm hidden sm:inline">Error</span>
+                      <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+                      <span className="font-medium text-sm">Error</span>
                     </div>
                   )}
                 </td>
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
-                  <div className="font-mono text-xs sm:text-sm text-white break-all">{pkg.package}</div>
-                  <div className="font-mono text-xs text-gray-400 sm:hidden">{pkg.version}</div>
+                <td className="px-6 py-4">
+                  <div className="font-mono text-sm text-white break-all">{pkg.package}</div>
                 </td>
-                <td className="px-3 sm:px-6 py-3 sm:py-4 font-mono text-xs sm:text-sm text-gray-400 hidden sm:table-cell">{pkg.version}</td>
-                <td className="px-3 sm:px-6 py-3 sm:py-4">
+                <td className="px-6 py-4 font-mono text-sm text-gray-400">{pkg.version}</td>
+                <td className="px-6 py-4">
                   {pkg.vulnerabilities.length > 0 ? (
-                    <span className="font-bold text-red-400 text-sm sm:text-base">{pkg.vulnerabilities.length}</span>
+                    <span className="font-bold text-red-400 text-base">{pkg.vulnerabilities.length}</span>
                   ) : (
-                    <span className="text-gray-500 text-sm sm:text-base">0</span>
+                    <span className="text-gray-500 text-base">0</span>
                   )}
                 </td>
-                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden md:table-cell">
+                <td className="px-6 py-4">
                   {pkg.vulnerabilities.length > 0 ? (
                     <div className="flex flex-wrap gap-1">
                       {pkg.vulnerabilities.slice(0, 2).map((vuln, vidx) => (
@@ -1963,7 +2191,7 @@ const ResultsTable = ({ results }) => {
                     <span className="text-gray-500">-</span>
                   )}
                 </td>
-                <td className="px-3 sm:px-6 py-3 sm:py-4 hidden lg:table-cell">
+                <td className="px-6 py-4">
                   {pkg.vulnerabilities.length > 0 && (
                     <div className="flex flex-col gap-1">
                       {pkg.vulnerabilities.slice(0, 2).map((vuln, vidx) => (
@@ -1972,9 +2200,9 @@ const ResultsTable = ({ results }) => {
                           href={vuln.references?.[0]?.url || vuln.database_specific?.url || '#'}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-xs sm:text-sm transition-all hover:gap-2"
+                          className="flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-sm transition-all hover:gap-2"
                         >
-                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                          <ExternalLink className="w-4 h-4 flex-shrink-0" />
                           <span className="font-mono truncate">{vuln.id || 'Ver más'}</span>
                         </a>
                       ))}
